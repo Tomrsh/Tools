@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DailyRoutineTools - नेटलीफाई पर होस्ट करने वाला टूल्स वेबसाइट</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --card-bg: #ffffff;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 4px 12px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        /* VAST Ad Modal */
+        .ad-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ad-modal.active {
+            display: flex;
+        }
+
+        .ad-modal-content {
+            width: 90%;
+            max-width: 800px;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .ad-video-container {
+            width: 100%;
+            position: relative;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            background: black;
+        }
+
+        .ad-video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .ad-close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--warning);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .ad-close-btn:hover {
+            background: #d11a6b;
+        }
+
+        .ad-info {
+            padding: 15px;
+            background: var(--light);
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+            border-top: 1px solid #ddd;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 40px 0 25px;
+            text-align: center;
+        }
+
+        .hero h2 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            color: var(--secondary);
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: var(--dark);
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 30px auto;
+            position: relative;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 20px var(--shadow);
+            padding-left: 50px;
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        /* Categories Section */
+        .categories {
+            padding: 20px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: var(--secondary);
+        }
+
+        .category-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .category-btn {
+            background: white;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .category-btn:hover, .category-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Tools Grid */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 6px 15px var(--shadow);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 25px rgba(67, 97, 238, 0.15);
+        }
+
+        .tool-icon {
+            height: 120px;
+            background: linear-gradient(to right, var(--accent), var(--primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+        }
+
+        .tool-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tool-content h3 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: var(--secondary);
+        }
+
+        .tool-content p {
+            color: #555;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .tool-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: block;
+            width: 100%;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .tool-btn:hover {
+            background: var(--secondary);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 30px 0;
+            background: linear-gradient(to bottom, #ffffff, #f0f4f8);
+            margin: 50px 0;
+            border-radius: 20px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--secondary);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--accent);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-column ul li a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column ul li a:hover {
+            color: var(--accent);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+            }
+            
+            .hero h2 {
+                font-size: 2.2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .ad-modal-content {
+                width: 95%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo h1 {
+                font-size: 1.5rem;
+            }
+            
+            .nav-links {
+                gap: 10px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+            
+            .category-buttons {
+                gap: 10px;
+            }
+            
+            .category-btn {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .ad-close-btn {
+                top: 10px;
+                right: 10px;
+                width: 35px;
+                height: 35px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- VAST Ad Modal -->
+    <div class="ad-modal" id="vastAdModal">
+        <div class="ad-modal-content">
+            <button class="ad-close-btn" id="adCloseBtn">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="ad-video-container" id="vastVideoContainer">
+                <!-- VAST video will be loaded here -->
+            </div>
+            <div class="ad-info">
+                <p>विज्ञापन - DailyRoutineTools आपके अनुभव को बेहतर बनाने के लिए विज्ञापन दिखा रहा है</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-tools"></i>
+                <h1>DailyRoutineTools</h1>
+            </div>
+            <div class="nav-links">
+                <a href="#"><i class="fas fa-home"></i> होम</a>
+                <a href="#"><i class="fas fa-th-large"></i> टूल्स</a>
+                <a href="#"><i class="fas fa-info-circle"></i> हमारे बारे में</a>
+                <a href="#"><i class="fas fa-envelope"></i> संपर्क करें</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h2>सभी दैनिक उपयोग के टूल एक ही जगह पर</h2>
+            <p>बिना विज्ञापन, बिना साइनअप, बिल्कुल फ्री - अपने दैनिक कार्यों को आसान बनाएं</p>
+            
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="अपना टूल खोजें...">
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories">
+        <div class="container">
+            <h2 class="section-title">टूल्स कैटेगरी</h2>
+            
+
+            <!-- Tools Grid -->
+            <div class="tools-grid">
+                <!-- Tool 1 -->
+                <div class="tool-card">
+                    <div class="tool-icon">
+                        <i class="fab fa-instagram"></i>
+                    </div>
+                    <div class="tool-content">
+                        <h3>Instagram Reels डाउनलोडर</h3>
+                        <p>बिना वॉटरमार्क के इंस्टाग्राम रील्स, स्टोरीज और पोस्ट्स डाउनलोड करें</p>
+                        <a href="https://reelsave.app/" class="tool-btn">इस्तेमाल करें</a>
+                    </div>
+                </div>
+
+                <!-- Tool 2 -->
+                <div class="tool-card">
+                    <div class="tool-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="tool-content">
+                        <h3>PDF टूल्स</h3>
+                        <p>PDF फाइलों को मर्ज करें, स्प्लिट करें, कम्प्रेस करें और कन्वर्ट करें</p>
+                        <a href="#" class="tool-btn">इस्तेमाल करें</a>
+                    </div>
+                </div>
+
+                <!-- Tool 3 -->
+                <div class="tool-card">
+                    <div class="tool-icon">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <div class="tool-content">
+                        <h3>पासवर्ड जनरेटर</h3>
+                        <p>मजबूत और सुरक्षित पासवर्ड बनाएं जिन्हें हैक नहीं किया जा सकता</p>
+                        <a href="#" class="tool-btn">इस्तेमाल करें</a>
+                    </div>
+                </div>
+
+                <!-- Tool 4 -->
+                <div class="tool-card">
+                    <div class="tool-icon">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <div class="tool-content">
+                        <h3>QR कोड जनरेटर</h3>
+                        <p>अपने लिंक्स, टेक्स्ट और कांटेक्ट इन्फो के लिए QR कोड बनाएं</p>
+                        <a href="#" class="tool-btn">इस्तेमाल करें</a>
+                    </div>
+                </div>
+
+                <!-- Tool 5 -->
+                <div class="tool-card">
+                    <div class="tool-icon">
+                        <i class="fas fa-compress-arrows-alt"></i>
+                    </div>
+                    <div class="tool-content">
+                        <h3>इमेज कम्प्रेसर</h3>
+                        <p>अपनी तस्वीरों का साइज कम करें बिना क्वालिटी खोए</p>
+                        <a href="/Image_Reducer.html" class="tool-btn">इस्तेमाल करें</a>
+                    </div>
+                </div>
+
+                <!-- Tool 6 -->
+                <div class="tool-card">
+                    <div class="tool-icon">
+                        <i class="fas fa-language"></i>
+                    </div>
+                    <div class="tool-content">
+                        <h3>टेक्स्ट ट्रांसलेटर</h3>
+                        <p>100+ भाषाओं में टेक्स्ट का तुरंत अनुवाद करें</p>
+                        <a href="#" class="tool-btn">इस्तेमाल करें</a>
+                    </div>
+                </div>
+
+                <!-- Tool 7 -->
+                <div class="tool-card">
+                    <div class="tool-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="tool-content">
+                        <h3>वीडियो कनवर्टर</h3>
+                        <p>वीडियो फॉर्मेट बदलें, कम्प्रेस करें और एडिट करें</p>
+                        <a href="#" class="tool-btn">इस्तेमाल करें</a>
+                    </div>
+                </div>
+
+                <!-- Tool 8 -->
+                <div class="tool-card">
+                    <div class="tool-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="tool-content">
+                        <h3>पासवर्ड मैनेजर</h3>
+                        <p>अपने सभी पासवर्ड सुरक्षित रूप से स्टोर और मैनेज करें</p>
+                        <a href="#" class="tool-btn">इस्तेमाल करें</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">क्यों चुनें DailyRoutineTools?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>ब्लिट्ज़ फास्ट</h3>
+                    <p>हमारे टूल्स तुरंत काम करते हैं, कोई इंतजार नहीं</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-ad"></i>
+                    </div>
+                    <h3>बिना विज्ञापन</h3>
+                    <p>कोई विज्ञापन नहीं, बिना डिस्टर्बेंस अनुभव</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>हर डिवाइस पर</h3>
+                    <p>मोबाइल, टैबलेट और डेस्कटॉप पर बेहतरीन अनुभव</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>100% सुरक्षित</h3>
+                    <p>आपकी प्राइवेसी और डेटा सुरक्षित रहता है</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <h3>पूरी तरह फ्री</h3>
+                    <p>सभी टूल्स बिल्कुल फ्री, कोई छिपा खर्च नहीं</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <h3>नियमित अपडेट</h3>
+                    <p>नए टूल्स और फीचर्स के साथ लगातार अपडेट</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>DailyRoutineTools</h3>
+                    <p>आपके दैनिक कार्यों को आसान बनाने के लिए सबसे अच्छा टूल्स कलेक्शन</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>पॉपुलर टूल्स</h3>
+                    <ul>
+                        <li><a href="#">Instagram Downloader</a></li>
+                        <li><a href="#">PDF Merger</a></li>
+                        <li><a href="#">Password Generator</a></li>
+                        <li><a href="#">Image Compressor</a></li>
+                        <li><a href="#">QR Code Generator</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>लिंक्स</h3>
+                    <ul>
+                        <li><a href="#">होम</a></li>
+                        <li><a href="#">टूल्स</a></li>
+                        <li><a href="#">हमारे बारे में</a></li>
+                        <li><a href="#">संपर्क करें</a></li>
+                        <li><a href="#">प्राइवेसी पॉलिसी</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>संपर्क करें</h3>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> support@dailyroutinetools.com</li>
+                        <li><i class="fab fa-twitter"></i> @dailyroutinetools</li>
+                        <li><i class="fab fa-github"></i> github.com/dailyroutinetools</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2023 DailyRoutineTools. सर्वाधिकार सुरक्षित। यह एक डेमो वेबसाइट है।
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // VAST Ad Configuration
+        const VAST_URL = "https://quickwittedconclusion.com/dxm.FIzvdqGLN-vyZrGrUz/Me/mh9kudZmUslLk/PtTwY_3TN/Dwc/zlMqDaYNtzNhjpcU0eN/zkMPwaNbwp";
+        const adModal = document.getElementById('vastAdModal');
+        const adCloseBtn = document.getElementById('adCloseBtn');
+        const vastVideoContainer = document.getElementById('vastVideoContainer');
+
+        // Show ad modal function
+        function showAdModal() {
+            // Clear previous video
+            vastVideoContainer.innerHTML = '';
+            
+            // Create VAST video iframe
+            const iframe = document.createElement('iframe');
+            iframe.src = `https://hilltopads.com/vast?url=${encodeURIComponent(VAST_URL)}`;
+            iframe.allowFullscreen = true;
+            iframe.setAttribute('allow', 'autoplay; fullscreen');
+            
+            vastVideoContainer.appendChild(iframe);
+            
+            // Show modal
+            adModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Set timer to auto-close ad after 30 seconds
+            setTimeout(() => {
+                closeAdModal();
+            }, 30000);
+        }
+
+        // Close ad modal function
+        function closeAdModal() {
+            adModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            
+            // Clear video container
+            vastVideoContainer.innerHTML = '';
+            
+            // Store in localStorage that ad was shown
+            localStorage.setItem('adShown', Date.now().toString());
+        }
+
+        // Event listeners
+        adCloseBtn.addEventListener('click', closeAdModal);
+
+        // Close modal when clicking outside the content
+        adModal.addEventListener('click', (e) => {
+            if (e.target === adModal) {
+                closeAdModal();
+            }
+        });
+
+        // Check if ad should be shown
+        function checkAndShowAd() {
+            const lastAdShown = localStorage.getItem('adShown');
+            const now = Date.now();
+            
+            // Show ad if:
+            // 1. No ad was shown before, OR
+            // 2. Last ad was shown more than 10 minutes ago
+            if (!lastAdShown || (now - parseInt(lastAdShown) > 10 * 60 * 1000)) {
+                // Show ad after 2 seconds of page load
+                setTimeout(showAdModal, 2000);
+            }
+        }
+
+        // Initialize ad on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Wait for page to fully load
+            setTimeout(checkAndShowAd, 1000);
+            
+            // Search functionality
+            document.querySelector('.search-container input').addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const toolCards = document.querySelectorAll('.tool-card');
+                
+                toolCards.forEach(card => {
+                    const title = card.querySelector('h3').textContent.toLowerCase();
+                    const description = card.querySelector('p').textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+
+            // Category filter functionality
+            const categoryButtons = document.querySelectorAll('.category-btn');
+        });
+    </script>
+</body>
+</html>
